@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>No!</title>
+  <style>
+   body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Times New Roman', Times, serif, sans-serif;
+  text-align: center;
+  color: palevioletred;
+  overflow: hidden;
+}
+
+/* full screen background gif */
+.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  filter: brightness(0.6);
+  background-size: cover;
+}
+
+/* text style */
+h1 {
+  font-size: 4em;
+  animation: pulse 1.5s infinite;
+}
+
+/* text animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* heart blast animation */
+/* main heart animation */
+#blastHeart {
+  display: inline-block;
+  animation: explode 2.5s infinite;
+}
+
+/* heart grow + vanish */
+@keyframes explode {
+  0%   { transform: scale(1); opacity:1; }
+  40%  { transform: scale(2); }
+  55%  { transform: scale(3); opacity:0; }
+  70%  { opacity:0; transform: scale(0); }
+  100% { opacity:1; transform: scale(1); }
+}
+
+/* particle hearts */
+.particle {
+  position: fixed;
+  font-size: 18px;
+  pointer-events: none;
+  animation: fly 1s forwards ease-out;
+}
+
+@keyframes fly {
+  from {
+    transform: translate(0,0) scale(1);
+    opacity:1;
+  }
+  to {
+    transform: translate(var(--x), var(--y)) scale(0.5);
+    opacity:0;
+  }
+}
+
+/* screen shake */
+.shake {
+  animation: shakeScreen 0.4s;
+}
+
+@keyframes shakeScreen {
+  0% { transform: translate(0,0); }
+  20% { transform: translate(-10px,5px); }
+  40% { transform: translate(10px,-5px); }
+  60% { transform: translate(-8px,4px); }
+  80% { transform: translate(8px,-4px); }
+  100% { transform: translate(0,0); }
+}
+
+</style>
+
+
+</head>
+<body>
+
+  <audio id="boomSound" src="universfield-impact-cinematic-boom-05-352465.mp3" preload="auto"></audio>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+
+    const sound = document.getElementById("boomSound");
+
+    function unlockAudio() {
+        if(!sound) return;
+
+        sound.play().then(()=>{
+            sound.pause();
+            sound.currentTime = 0;
+            console.log("Audio unlocked");
+        }).catch(()=>{});
+
+        document.removeEventListener("click", unlockAudio);
+        document.removeEventListener("keydown", unlockAudio);
+        document.removeEventListener("touchstart", unlockAudio);
+    }
+
+    document.addEventListener("click", unlockAudio);
+    document.addEventListener("keydown", unlockAudio);
+    document.addEventListener("touchstart", unlockAudio);
+
+});
+</script>
+
+  <img class="bg" src="giphy.webp">
+  <h1> <span id="blastHeart"> No Worries! ❤️ <br>
+I Still Waiting 🫶 </span> </h1>
+
+      <style>
+/* Heart style */
+.heart {
+  position: fixed;
+  bottom: -50px;
+  color: red;
+  font-size: 20px;
+  animation: floatUp linear infinite;
+  opacity: 0.8;
+}
+
+/* Floating animation */
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  100% {
+    transform: translateY(-110vh) scale(1.4);
+    opacity: 0;
+  }
+}
+</style>
+
+<script>
+const heart = document.getElementById("blastHeart");
+const sound = document.getElementById("boomSound");
+
+function createParticles() {
+    const rect = heart.getBoundingClientRect();
+    const centerX = rect.left + rect.width/2;
+    const centerY = rect.top + rect.height/2;
+
+    // PLAY SOUND
+    sound.currentTime = 0;
+    sound.play();
+
+    // SCREEN SHAKE
+    document.body.classList.add("shake");
+    setTimeout(()=>document.body.classList.remove("shake"),400);
+
+    // PARTICLES
+    for(let i=0;i<25;i++){
+        const p = document.createElement("div");
+        p.className="particle";
+        p.innerHTML="❤";
+
+        const angle = Math.random()*2*Math.PI;
+        const distance = 100 + Math.random()*150;
+
+        const x = Math.cos(angle)*distance;
+        const y = Math.sin(angle)*distance;
+
+        p.style.left=centerX+"px";
+        p.style.top=centerY+"px";
+        p.style.setProperty('--x', x+'px');
+        p.style.setProperty('--y', y+'px');
+
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),1000);
+    }
+}
+
+setInterval(createParticles,2500);
+</script>
+
+
+<script>
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+
+    // List of emojis you want to appear
+    const emojis = ["💐", "😜", "😉"]; 
+    // Pick a random emoji from the list
+    heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+
+    // random position
+    heart.style.left = Math.random() * 100 + "vw";
+
+    // random size
+    heart.style.fontSize = (15 + Math.random() * 35) + "px";
+
+    // random speed
+    heart.style.animationDuration = (3 + Math.random() * 5) + "s";
+
+    document.body.appendChild(heart);
+
+    // remove after animation
+    setTimeout(() => {
+        heart.remove();
+    }, 8000);
+}
+
+// create hearts continuously
+setInterval(createHeart, 100);
+</script>
+
+</body>
+</html>
